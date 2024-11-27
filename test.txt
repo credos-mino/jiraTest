@@ -7,6 +7,12 @@ mino b1 third commit
 mino b2 branch
 
 rebase 후 커밋
+<<<<<<< HEAD
 
 다시 b1 branch
 리베이스 후 b2
+=======
+리베이스 후 b2
+
+리베이스 다시 시도
+>>>>>>> 13d36eb (b2: 리베이스 다시 해봐)
