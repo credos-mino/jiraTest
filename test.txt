@@ -7,3 +7,4 @@ mino b1 third commit
 mino b2 branch
 
 rebase 후 커밋
+리베이스 후 b2
