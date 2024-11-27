@@ -5,3 +5,5 @@ mino b1 branch
 mino b1 second commit
 mino b1 third commit
 mino b2 branch
+
+rebase 후 커밋
