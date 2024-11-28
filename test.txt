@@ -14,3 +14,4 @@ rebase 후 커밋
 main
 main
 MINO7
+MINO8
