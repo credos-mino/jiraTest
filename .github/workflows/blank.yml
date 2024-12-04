@@ -33,3 +33,23 @@ jobs:
         run: |
           echo "PR_CREATED_AT_UTC=$PR_CREATED_AT_UTC"
           echo "PR_CREATED_AT_KST=$PR_CREATED_AT_KST"
+      
+      - name: Send Slack notification When FE PR
+        uses: slackapi/slack-github-action@v1.24.0  # slack api 를 이용하기
+        with:
+          channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
+          payload: |
+            {
+                "text": "",
+                "blocks": [
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간: ${{ steps.deadline.outputs.DEADLINE }}"
+                        }
+                    }
+                ]
+            } // id: deadline 에서 calculatePRDeadline.js가 출력하는 DEADLINE 값 가져오기
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Github Secret에 설정한 Slack 토큰 값 
