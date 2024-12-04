@@ -5,8 +5,6 @@ on:
     types:
       - opened # open된 pr인 경우
     branches: ['main'] # 다른 브랜치에서 dev 브랜치를 향하는 경우
-    paths:
-      - 'sourcetree/**' # frontend 폴더에서 변경사항이 일어난 경우
 
 
 jobs:
