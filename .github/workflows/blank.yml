@@ -4,8 +4,7 @@ on:
   pull_request:
     types:
       - opened # open된 pr인 경우
-    branches: ['main'] # 다른 브랜치에서 dev 브랜치를 향하는 경우
-
+    branches: ["main"] # 다른 브랜치에서 dev 브랜치를 향하는 경우
 
 jobs:
   pull_request_open:
@@ -33,9 +32,9 @@ jobs:
         run: |
           echo "PR_CREATED_AT_UTC=$PR_CREATED_AT_UTC"
           echo "PR_CREATED_AT_KST=$PR_CREATED_AT_KST"
-      
+
       - name: Send Slack notification When FE PR
-        uses: slackapi/slack-github-action@v1.24.0  # slack api 를 이용하기
+        uses: slackapi/slack-github-action@v1.24.0 # slack api 를 이용하기
         with:
           channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
           payload: |
@@ -50,6 +49,7 @@ jobs:
                         }
                     }
                 ]
-            } // id: deadline 에서 calculatePRDeadline.js가 출력하는 DEADLINE 값 가져오기
+            } 
+            # id: deadline 에서 calculatePRDeadline.js가 출력하는 DEADLINE 값 가져오기
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Github Secret에 설정한 Slack 토큰 값 
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Github Secret에 설정한 Slack 토큰 값
