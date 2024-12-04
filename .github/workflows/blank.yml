@@ -30,11 +30,6 @@ jobs:
           UTC_TIME=$PR_CREATED_AT_UTC
           KST_TIME=$(date -u -d "$UTC_TIME 9 hour" "+%Y-%m-%dT%H:%M:%SZ")
           echo "PR_CREATED_AT_KST=$KST_TIME" >> $GITHUB_ENV
-
-      # - name: Log times
-      #   run: |
-      #     echo "PR_CREATED_AT_UTC=$PR_CREATED_AT_UTC"
-      #     echo "PR_CREATED_AT_KST=$PR_CREATED_AT_KST"
       
       - name: Send Slack notification When FE PR
         uses: slackapi/slack-github-action@v1.24.0  # slack api 를 이용하기
