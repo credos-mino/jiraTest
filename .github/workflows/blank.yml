@@ -1,0 +1,37 @@
+name: Notify Pull Request Deadline (FE)
+
+on:
+  pull_request:
+    types:
+      - opened # open된 pr인 경우
+    branches: ['main'] # 다른 브랜치에서 dev 브랜치를 향하는 경우
+    paths:
+      - '/**' # frontend 폴더에서 변경사항이 일어난 경우
+
+
+jobs:
+  pull_request_open:
+    runs-on: ubuntu-latest
+    name: New pr to repo
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set environment variable
+        run: |
+          if [ -z "${{ github.event.pull_request.created_at }}" ]; then
+            echo "PR_CREATED_AT_UTC not available"
+            exit 1
+          fi
+          echo "PR_CREATED_AT_UTC=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
+
+      - name: Convert UTC to KST
+        run: |
+          UTC_TIME=$PR_CREATED_AT_UTC
+          KST_TIME=$(date -d "$UTC_TIME + 9 hours" "+%Y-%m-%dT%H:%M:%SZ")
+          echo "PR_CREATED_AT_KST=$KST_TIME" >> $GITHUB_ENV
+
+      - name: Log times
+        run: |
+          echo "PR_CREATED_AT_UTC=$PR_CREATED_AT_UTC"
+          echo "PR_CREATED_AT_KST=$PR_CREATED_AT_KST"
