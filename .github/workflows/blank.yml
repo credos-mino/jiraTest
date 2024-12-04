@@ -35,7 +35,7 @@ jobs:
           echo "PR_CREATED_AT_KST=$PR_CREATED_AT_KST"
       
       - name: Send Slack notification When FE PR
-        uses: slackapi/slack-github-action@v1.24.0  // slack api 를 이용하기
+        uses: slackapi/slack-github-action@v1.24.0  # slack api 를 이용하기
         with:
           channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
           payload: |
