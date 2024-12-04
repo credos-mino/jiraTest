@@ -4,7 +4,7 @@ on:
   pull_request:
     types:
       - opened # open된 pr인 경우
-      - reopened  # PR이 리오픈되었을 때
+      # - reopened  # PR이 리오픈되었을 때,  굳이 필요는 없을 것 같다.
     branches: ['main'] # 다른 브랜치에서 dev 브랜치를 향하는 경우
 
 
@@ -29,7 +29,7 @@ jobs:
         run: |
           UTC_TIME=$PR_CREATED_AT_UTC
           KST_TIME=$(date -u -d "$UTC_TIME 9 hour" "+%Y-%m-%dT%H:%M:%SZ")
-          echo "PR_CREATED_AT_KST=$KST_TIME" >> $GITHUB_ENV
+          echo "PR_CREATED_AT_KST=$KST_TIME" >> $GITHUB_ENVdd
       
       - name: Send Slack notification When FE PR
         uses: slackapi/slack-github-action@v1.24.0  # slack api 를 이용하기
