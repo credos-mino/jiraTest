@@ -16,20 +16,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Remove "https://" from PR URL
-        id: remove_https
-        run: |
-          PR_URL="${{ github.event.pull_request.html_url }}"
-          PR_URL="http://${PR_URL#https://}"          
-          echo "::set-output name=pr_url::$PR_URL"
-
       - name: Set environment variable
-        run: echo "PR_CREATED_AT_UTC=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
+        run: |
+          if [ -z "${{ github.event.pull_request.created_at }}" ]; then
+            echo "PR_CREATED_AT_UTC not available"
+            exit 1
+          fi
+          echo "PR_CREATED_AT_UTC=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
+
       - name: Convert UTC to KST
         run: |
           UTC_TIME=$PR_CREATED_AT_UTC
-          KST_TIME=$(date -u -d "$UTC_TIME 9 hour" "+%Y-%m-%dT%H:%M:%SZ")
+          KST_TIME=$(date -d "$UTC_TIME + 9 hours" "+%Y-%m-%dT%H:%M:%SZ")
           echo "PR_CREATED_AT_KST=$KST_TIME" >> $GITHUB_ENV
+
+      - name: Log times
+        run: |
+          echo "PR_CREATED_AT_UTC=$PR_CREATED_AT_UTC"
+          echo "PR_CREATED_AT_KST=$PR_CREATED_AT_KST"
       
       - name: Send Slack notification When FE PR
         uses: slackapi/slack-github-action@v1.24.0  # slack api 를 이용하기
