@@ -4,6 +4,7 @@ on:
   pull_request:
     types:
       - opened # open된 pr인 경우
+      - reopened  # PR이 리오픈되었을 때
     branches: ['main'] # 다른 브랜치에서 dev 브랜치를 향하는 경우
 
 
