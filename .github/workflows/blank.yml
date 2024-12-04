@@ -50,7 +50,6 @@ jobs:
                         }
                     }
                 ]
-            } 
-                # id: deadline 에서 calculatePRDeadline.js가 출력하는 DEADLINE 값 가져오기
+                        }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Github Secret에 설정한 Slack 토큰 값 
