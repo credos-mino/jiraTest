@@ -33,7 +33,7 @@ jobs:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "*새로운 Pull Request* 요청이 있습니다:\n\n*제목:* <${{github.event.pull_request.html_url}}|${{github.event.pull_request.title}}>\n*상태:* ${{github.event.pull_request.state}}\n*요청자:* ${{github.event.pull_request.user.login}}\n\n*변경 사항:* ${{github.event.pull_request.body}}"
+                            "text": ":memo: *새로운 Pull Request* 요청이 있습니다:\n\n*제목:* <${{github.event.pull_request.html_url}}|${{github.event.pull_request.title}}>\n*상태:* ${{github.event.pull_request.state}} :status:\n*요청자:* :bust_in_silhouette: ${{github.event.pull_request.user.login}}\n\n*변경 사항:* :page_facing_up: ${{github.event.pull_request.body}}"
                         }
                     },
                     {
@@ -44,11 +44,11 @@ jobs:
                         "fields": [
                             {
                                 "type": "mrkdwn",
-                                "text": "*PR 생성일:*\n${{github.event.pull_request.created_at}}"
+                                "text": ":calendar: *PR 생성일:*\n${{github.event.pull_request.created_at}}"
                             },
                             {
                                 "type": "mrkdwn",
-                                "text": "*최종 업데이트:*\n${{github.event.pull_request.updated_at}}"
+                                "text": ":clock2: *최종 업데이트:*\n${{github.event.pull_request.updated_at}}"
                             }
                         ]
                     },
@@ -59,11 +59,12 @@ jobs:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "*PR 검토와 머지*:\n\n💬 <${{github.event.pull_request.html_url}}/files|변경된 파일 보기>\n✅ <${{github.event.pull_request.html_url}}/commits|커밋 보기>"
+                            "text": ":mag_right: *PR 검토와 머지*:\n\n💬 <${{github.event.pull_request.html_url}}/files|변경된 파일 보기>\n✅ <${{github.event.pull_request.html_url}}/commits|커밋 보기>"
                         }
                     }
                 ]
             }
+
 
 
         env:
