@@ -21,37 +21,42 @@ jobs:
       - name: Check Url
         run: echo "github.event.pull_request.title"
 
-      - name: Get current date in KST (Korean Standard Time)
+       # 날짜를 한국 시간(KST)으로 변환
+      - name: Set KST time for PR dates
+        id: time
         run: |
-          export KST_DATE=$(TZ='Asia/Seoul' date +'%Y-%m-%d')
-          echo "KST_DATE=$KST_DATE" >> $GITHUB_ENV  
-      
-      - name: Send Slack notification When BE PR
+         # 변환된 날짜를 한국 시간(KST)으로 저장
+         export KST_CREATED_AT=$(TZ='Asia/Seoul' date -d "${{ github.event.pull_request.created_at }}" +'%Y-%m-%d')
+         export KST_UPDATED_AT=$(TZ='Asia/Seoul' date -d "${{ github.event.pull_request.updated_at }}" +'%Y-%m-%d')
+         echo "KST_CREATED_AT=$KST_CREATED_AT" >> $GITHUB_ENV
+         echo "KST_UPDATED_AT=$KST_UPDATED_AT" >> $GITHUB_ENV
+
+     # Slack API를 사용하여 PR 정보를 전송
+      - name: Send PR information to Slack
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
-          payload: |
-            {
-                text": "새로운 PR 요청이 도착했습니다! :star2:",
-                "attachments": [
-                  {
-                    "color": "#36a64f",
-                    "title": "${{ github.event.pull_request.title }}",
-                    "title_link": "${{ github.event.pull_request.html_url }}",
-                    "text": "*요청자:* ${{ github.event.pull_request.user.login }} :bust_in_silhouette:\n\n*상태:* ${{ github.event.pull_request.state }} :status:\n\n*변경 사항:* ${{ github.event.pull_request.body }} :page_facing_up:\n\n*PR 생성일:* ${{ env.KST_CREATED_AT }} :calendar:\n*최종 업데이트:* ${{ env.KST_UPDATED_AT }} :clock2:",
-                    "footer": "PR 검토 및 머지",
-                    "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
-                    "actions": [
-                      {
-                        "type": "button",
-                        "text": "PR 페이지로 이동",
-                        "url": "${{ github.event.pull_request.html_url }}",
-                        "style": "primary"
-                      }
-                    ]
-                  }
-                ]
-            }
+         channel-id: ${{ secrets.SLACK_FE_CHANNEL }}  # Slack 채널 ID
+         slack-token: ${{ secrets.SLACK_BOT_TOKEN }}  # Slack Bot Token
+         text: "새로운 PR 요청이 도착했습니다! :star2:"
+         attachments: |
+           [
+             {
+               "color": "#36a64f",
+               "title": "${{ github.event.pull_request.title }}",
+               "title_link": "${{ github.event.pull_request.html_url }}",
+               "text": "*요청자:* ${{ github.event.pull_request.user.login }} :bust_in_silhouette:\n\n*상태:* ${{ github.event.pull_request.state }} :status:\n\n*변경 사항:* ${{ github.event.pull_request.body }} :page_facing_up:\n\n*PR 생성일:* ${{ env.KST_CREATED_AT }} :calendar:\n*최종 업데이트:* ${{ env.KST_UPDATED_AT }} :clock2:",
+               "footer": "PR 검토 및 머지",
+               "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+               "actions": [
+                 {
+                   "type": "button",
+                   "text": "PR 페이지로 이동",
+                   "url": "${{ github.event.pull_request.html_url }}",
+                   "style": "primary"
+                 }
+               ]
+             }
+           ]
 
 
 
