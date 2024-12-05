@@ -52,3 +52,4 @@ jobs:
       #                   }
         # env: # 환경 변수를 설정합니다.
         #   SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Github Secret에 설정한 Slack 토큰 값 
+#리뷰어 등록하는법ㄴ
