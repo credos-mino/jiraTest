@@ -27,43 +27,27 @@ jobs:
           channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
           payload: |
             {
-                "text": "새로운 PR 요청이 있습니다! :star2:",
-                "blocks": [
+                "text": "새로운 PR 요청이 도착했습니다! :star2:",
+                "attachments": [
                     {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": ":memo: *새로운 Pull Request* 요청이 있습니다:\n\n*제목:* <${{github.event.pull_request.html_url}}|${{github.event.pull_request.title}}>\n*상태:* ${{github.event.pull_request.state}} :status:\n*요청자:* :bust_in_silhouette: ${{github.event.pull_request.user.login}}\n\n*변경 사항:* :page_facing_up: ${{github.event.pull_request.body}}"
-                        }
-                    },
-                    {
-                        "type": "divider"
-                    },
-                    {
-                        "type": "section",
-                        "fields": [
+                        "color": "#36a64f",
+                        "title": "${{github.event.pull_request.title}}",
+                        "title_link": "${{github.event.pull_request.html_url}}",
+                        "text": "*요청자:* ${{github.event.pull_request.user.login}} :bust_in_silhouette:\n\n*상태:* ${{github.event.pull_request.state}} :status:\n\n*변경 사항:* ${{github.event.pull_request.body}} :page_facing_up:\n\n*PR 생성일:* ${{github.event.pull_request.created_at}} :calendar:\n*최종 업데이트:* ${{github.event.pull_request.updated_at}} :clock2:",
+                        "footer": "PR 검토 및 머지",
+                        "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+                        "actions": [
                             {
-                                "type": "mrkdwn",
-                                "text": ":calendar: *PR 생성일:*\n${{github.event.pull_request.created_at}}"
-                            },
-                            {
-                                "type": "mrkdwn",
-                                "text": ":clock2: *최종 업데이트:*\n${{github.event.pull_request.updated_at}}"
+                                "type": "button",
+                                "text": "PR 페이지로 이동",
+                                "url": "${{github.event.pull_request.html_url}}",
+                                "style": "primary"
                             }
                         ]
-                    },
-                    {
-                        "type": "divider"
-                    },
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": ":mag_right: *PR 검토와 머지*:\n\n💬 <${{github.event.pull_request.html_url}}/files|변경된 파일 보기>\n✅ <${{github.event.pull_request.html_url}}/commits|커밋 보기>\n\n:shipit: *PR 머지*는 여기에서 진행하실 수 있습니다: <${{github.event.pull_request.html_url}}|PR 페이지로 이동>"
-                        }
                     }
                 ]
             }
+
 
 
 
