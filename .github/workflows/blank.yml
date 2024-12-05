@@ -29,7 +29,7 @@ jobs:
                         "color": "#36a64f",
                         "title": "${{github.event.pull_request.title}}",
                         "title_link": "${{github.event.pull_request.html_url}}",
-                        "text": "*요청자:* ${{github.event.pull_request.user.login}} :bust_in_silhouette:\n\n*상태:* ${{ github.event.pull_request.state == 'open' && ':rocket:' || ':lock:' }}\n\n*변경 사항:* ${{github.event.pull_request.body}} :page_facing_up:",
+                        "text": "*요청자:* ${{github.event.pull_request.user.login}} :bust_in_silhouette:\n\n*상태:* ${{ github.event.pull_request.state}} ${{ github.event.pull_request.state == 'open' && ':rocket:' || ':lock:' }}\n\n*변경 사항:* ${{github.event.pull_request.body}} :page_facing_up:",
                         "footer": "PR 검토 및 머지",
                         "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
                         "actions": [
@@ -43,7 +43,7 @@ jobs:
                     },
                     {
                         "color": "#ffcc00",
-                        "text": "🔧 **이 PR에 대한 추가 정보:**\n- **브랜치**: `${{github.event.pull_request.head.ref}}`\n- **리뷰어**: ${{github.event.pull_request.requested_reviewers}}",
+                        "text": "🔧 *이 PR에 대한 추가 정보:*\n- *브랜치*: `${{github.event.pull_request.head.ref}}`",
                         "footer": "PR에 대한 추가 확인",
                         "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
                     }
