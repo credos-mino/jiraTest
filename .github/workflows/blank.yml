@@ -3,10 +3,10 @@ name: Notify Pull Request (BE)
 on:
   pull_request:
     types:
-      - opened  # PR이 처음 열릴 때
-      - reopened  # PR이 리오픈될 때
-      - synchronize # PR에 새로운 commit이 push 되었을 때
-      - review_requested # 리뷰 요청이 왔을 경우
+      - opened
+      - reopened
+      - synchronize
+      - review_requested
     branches: ['main']
 
 jobs:
@@ -15,39 +15,42 @@ jobs:
     name: New PR to repo
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2      
-        
-      - name: Send Slack notification When BE PR
+        uses: actions/checkout@v2
+
+      - name: Send Slack notification for PR
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
+          channel-id: ${{ secrets.SLACK_FE_CHANNEL }}
           payload: |
             {
-                "text": "*새로운 PR 요청이 도착했습니다!* :tada:",
+                "text": ":github: *새로운 Pull Request가 생성되었습니다!*",
                 "attachments": [
                     {
                         "color": "#36a64f",
-                        "title": "${{github.event.pull_request.title}}",
+                        "title": "#${{github.event.pull_request.number}} [${{github.event.pull_request.title}}]",
                         "title_link": "${{github.event.pull_request.html_url}}",
-                        "text": "*요청자:* ${{github.event.pull_request.user.login}} :bust_in_silhouette:\n\n*상태:* ${{ github.event.pull_request.state}} ${{ github.event.pull_request.state == 'open' && ':rocket:' || ':lock:' }}\n\n*변경 사항:* ${{github.event.pull_request.body}} :page_facing_up:",
-                        "footer": "PR 검토 및 머지",
-                        "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
-                        "actions": [
+                        "fields": [
                             {
-                                "type": "button",
-                                "text": "PR 페이지로 이동",
-                                "url": "${{github.event.pull_request.html_url}}",
-                                "style": "primary"
+                                "title": "작성자",
+                                "value": "${{github.event.pull_request.user.login}}",
+                                "short": true
+                            },
+                            {
+                                "title": "대상 브랜치",
+                                "value": "${{github.event.pull_request.base.ref}}",
+                                "short": true
+                            },
+                            {
+                                "title": "소스 브랜치",
+                                "value": "${{github.event.pull_request.head.ref}}",
+                                "short": true
                             }
-                        ]
-                    },
-                    {
-                        "color": "#ffcc00",
-                        "text": "🔧 *이 PR에 대한 추가 정보:*\n- *소스 브랜치*: `${{github.event.pull_request.head.ref}}`\n- *대상 브랜치*: `${{github.event.pull_request.base.ref}}`",
-                        "footer": "PR에 대한 추가 확인",
-                        "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
+                        ],
+                        "footer": "GitHub Pull Request",
+                        "footer_icon": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+                        "ts": ${Math.floor(new Date().getTime() / 1000)}
                     }
                 ]
             }
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
