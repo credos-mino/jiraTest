@@ -1,4 +1,4 @@
-name: Notify Pull Request Deadline (FE)
+name: Notify Pull Request (BE)
 
 on:
   pull_request:
@@ -42,31 +42,25 @@ jobs:
         run: echo "Review was synchronize!"
 
       - name: 상태 확인
-        run: |
-          echo "PR State: ${{ github.event.pull_request.state }}"
-          echo "${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}"
+        run: echo "${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}"
         
       
-      # - name: Send Slack notification when review was requested.
-      #   if: github.event.pull_request.state == 'review_requested'
-      #   uses: slackapi/slack-github-action@v1.24.0  # slack api 를 이용하기
-      #   with:
-      #     channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
-      #     # text: 메시지 본문 설정
-      #     # block: 메시지 블록 설정
-      #     payload: |
-      #       {
-      #           "text": "pr review request",
-      #           "blocks": [
-      #               {
-      #                   "type": "section",
-      #                   "text": {
-      #                       "type": "mrkdwn",
-      #                       "text": "리뷰어로 할당되었습니다. \n\n\n<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간: ${{ steps.deadline.outputs.DEADLINE }}"
-      #                   }
-      #               }
-      #           ]
-      #                   }
-        # env: # 환경 변수를 설정합니다.
-        #   SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Github Secret에 설정한 Slack 토큰 값 
-#리뷰어 등록하는법ㄴ
+      - name: Send Slack notification When BE PR
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
+          payload: |
+            {
+                "text": "",
+                "blocks": [
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\nPR ACTION: ${{ github.event.action }}"
+                        }
+                    }
+                ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
