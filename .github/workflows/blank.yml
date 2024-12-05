@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
+
       - name: Check if PR is opened
         if: github.event.action == 'opened'
         run: echo "PR was opened!"
@@ -56,4 +56,4 @@ jobs:
                 ]
             }
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰sss
