@@ -59,11 +59,12 @@ jobs:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": ":mag_right: *PR 검토와 머지*:\n\n💬 <${{github.event.pull_request.html_url}}/files|변경된 파일 보기>\n✅ <${{github.event.pull_request.html_url}}/commits|커밋 보기>"
+                            "text": ":mag_right: *PR 검토와 머지*:\n\n💬 <${{github.event.pull_request.html_url}}/files|변경된 파일 보기>\n✅ <${{github.event.pull_request.html_url}}/commits|커밋 보기>\n\n:shipit: *PR 머지*는 여기에서 진행하실 수 있습니다: <${{github.event.pull_request.html_url}}|PR 페이지로 이동>"
                         }
                     }
                 ]
             }
+
 
 
 
