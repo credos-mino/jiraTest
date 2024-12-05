@@ -24,29 +24,28 @@ jobs:
       - name: Send Slack notification When BE PR
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
-          payload: |
-            {
-                "text": "새로운 PR 요청이 도착했습니다! :star2:",
-                "attachments": [
-                    {
-                        "color": "#36a64f",
-                        "title": "${{github.event.pull_request.title}}",
-                        "title_link": "${{github.event.pull_request.html_url}}",
-                        "text": "*요청자:* ${{github.event.pull_request.user.login}} :bust_in_silhouette:\n\n*상태:* ${{github.event.pull_request.state}} :status:\n\n*변경 사항:* ${{github.event.pull_request.body}} :page_facing_up:\n\n*PR 생성일:* ${{github.event.pull_request.created_at | slice(0, 10)}} :calendar:\n*최종 업데이트:* ${{github.event.pull_request.updated_at | slice(0, 10)}} :clock2:",
-                        "footer": "PR 검토 및 머지",
-                        "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
-                        "actions": [
-                            {
-                                "type": "button",
-                                "text": "PR 페이지로 이동",
-                                "url": "${{github.event.pull_request.html_url}}",
-                                "style": "primary"
-                            }
-                        ]
-                    }
+          channel-id: ${{ secrets.SLACK_FE_CHANNEL }}  # Slack 채널 ID
+          slack-token: ${{ secrets.SLACK_BOT_TOKEN }}  # Slack Bot Token
+          text: "새로운 PR 요청이 도착했습니다! :star2:"
+          attachments: |
+            [
+              {
+                "color": "#36a64f",
+                "title": "${{ github.event.pull_request.title }}",
+                "title_link": "${{ github.event.pull_request.html_url }}",
+                "text": "*요청자:* ${{ github.event.pull_request.user.login }} :bust_in_silhouette:\n\n*상태:* ${{ github.event.pull_request.state }} :status:\n\n*변경 사항:* ${{ github.event.pull_request.body }} :page_facing_up:",
+                "footer": "PR 검토 및 머지",
+                "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+                "actions": [
+                  {
+                    "type": "button",
+                    "text": "PR 페이지로 이동",
+                    "url": "${{ github.event.pull_request.html_url }}",
+                    "style": "primary"
+                  }
                 ]
-            }
+              }
+            ]
 
 
 
