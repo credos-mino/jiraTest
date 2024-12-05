@@ -27,7 +27,7 @@ jobs:
           channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
           payload: |
             {
-                "text": "새로운 PR 요청이 있습니다!",
+                "text": "새로운 PR 요청이 있습니다! :star2:",
                 "blocks": [
                     {
                         "type": "section",
@@ -64,6 +64,7 @@ jobs:
                     }
                 ]
             }
+
 
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰sssssss
