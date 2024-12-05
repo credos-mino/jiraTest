@@ -49,5 +49,5 @@ jobs:
                         }
                     ]
                 }
-        env: # 환경 변수를 설정합니다.
+        env: # 환경 변수를 설정합니다.ssdf
             SLACK_BOT_TOKEN: ${{ secrets.TEST_BOT_TOKEN }} # Slack 봇 토큰을 비밀로 설정합니다.
