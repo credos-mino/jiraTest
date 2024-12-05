@@ -57,10 +57,14 @@ jobs:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
+<<<<<<< HEAD
                             "text": "<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\nPR ACTION: ${{ github.event.action }}"
+=======
+                            "text": "🔔 <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>\nPR ACTION: ${{ github.event.action }}"
+>>>>>>> test/git_action_test2
                         }
                     }
                 ]
             }
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰sss
