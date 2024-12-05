@@ -17,6 +17,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Remove "https://" from PR URL
+        id: remove_https
+        run: |
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          PR_URL="http://${PR_URL#https://}"          
+          echo "::set-output name=pr_url::$PR_URL"
+
       - name: Check if PR is opened
         if: github.event.pull_request.state == 'opened'
         run: echo "PR was opened!"
@@ -28,6 +35,11 @@ jobs:
       - name: Check if review was requested
         if: github.event.pull_request.state == 'review_requested'
         run: echo "Review was requested!"
+
+      - name: pring Console
+        run: |
+          echo "PR State: ${{ github.event.pull_request.state }}"
+          echo ${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}
         
       
       # - name: Send Slack notification when review was requested.
