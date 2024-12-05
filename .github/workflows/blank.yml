@@ -5,6 +5,7 @@ on:
     types:
       - opened # open된 pr인 경우
       - reopened  # PR이 리오픈되었을 때
+      - synchronize # PR에 새로운 commit이 push 되었을 때
       - review_requested # 리뷰 요청이 왔을 경우
     branches: ['main'] # 다른 브랜치에서 dev 브랜치를 향하는 경우
 
@@ -36,10 +37,14 @@ jobs:
         if: github.event.pull_request.state == 'review_requested'
         run: echo "Review was requested!"
 
-      - name: pring Console
+      - name: Check if review was synchronize
+        if: github.event.pull_request.state == 'synchronize'
+        run: echo "Review was synchronize!"
+
+      - name: 상태 확인
         run: |
           echo "PR State: ${{ github.event.pull_request.state }}"
-          echo ${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}
+          echo "${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}"
         
       
       # - name: Send Slack notification when review was requested.
