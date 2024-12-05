@@ -16,7 +16,10 @@ jobs:
     name: New pr to repo
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2        
+        uses: actions/checkout@v2      
+        
+      - name: Check Url
+        run: echo "github.event.pull_request.title"
       
       - name: Send Slack notification When BE PR
         uses: slackapi/slack-github-action@v1.24.0
