@@ -27,16 +27,43 @@ jobs:
           channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
           payload: |
             {
-                "text": "pr request",
+                "text": "새로운 PR 요청이 있습니다!",
                 "blocks": [
                     {
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "<${{github.event.pull_request.html_url}}|${{github.event.pull_request.title}}> (${{github.event.pull_request.state}})"
+                            "text": "*새로운 Pull Request* 요청이 있습니다:\n\n*제목:* <${{github.event.pull_request.html_url}}|${{github.event.pull_request.title}}>\n*상태:* ${{github.event.pull_request.state}}\n*요청자:* ${{github.event.pull_request.user.login}}\n\n*변경 사항:* ${{github.event.pull_request.body}}"
+                        }
+                    },
+                    {
+                        "type": "divider"
+                    },
+                    {
+                        "type": "section",
+                        "fields": [
+                            {
+                                "type": "mrkdwn",
+                                "text": "*PR 생성일:*\n${{github.event.pull_request.created_at}}"
+                            },
+                            {
+                                "type": "mrkdwn",
+                                "text": "*최종 업데이트:*\n${{github.event.pull_request.updated_at}}"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "divider"
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "*PR 검토와 머지*:\n\n💬 <${{github.event.pull_request.html_url}}/files|변경된 파일 보기>\n✅ <${{github.event.pull_request.html_url}}/commits|커밋 보기>"
                         }
                     }
                 ]
             }
+
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰sssssss
