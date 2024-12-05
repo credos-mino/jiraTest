@@ -43,7 +43,7 @@ jobs:
                     },
                     {
                         "color": "#ffcc00",
-                        "text": "🔧 *이 PR에 대한 추가 정보:*\n- *브랜치*: `${{github.event.pull_request.head.ref}}`",
+                        "text": "🔧 *이 PR에 대한 추가 정보:*\n- *소스 브랜치*: `${{github.event.pull_request.head.ref}}`\n- *대상 브랜치*: `${{github.event.pull_request.base.ref}}`",
                         "footer": "PR에 대한 추가 확인",
                         "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
                     }
