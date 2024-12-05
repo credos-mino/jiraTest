@@ -16,34 +16,7 @@ jobs:
     name: New pr to repo
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Remove "https://" from PR URL
-        id: remove_https
-        run: |
-          PR_URL="${{ github.event.pull_request.html_url }}"
-          PR_URL="http://${PR_URL#https://}"          
-          echo "::set-output name=pr_url::$PR_URL"
-
-      - name: Check if PR is opened
-        if: github.event.action == 'opened'
-        run: echo "PR was opened!"
-
-      - name: Check if PR is reopened
-        if: github.event.action == 'reopened'
-        run: echo "PR was reopened!"
-
-      - name: Check if review was requested
-        if: github.event.action == 'review_requested'
-        run: echo "Review was requested!"
-
-      - name: Check if review was synchronize
-        if: github.event.action == 'synchronize'
-        run: echo "Review was synchronize!"
-
-      - name: 상태 확인
-        run: echo "${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}"
-        
+        uses: actions/checkout@v2        
       
       - name: Send Slack notification When BE PR
         uses: slackapi/slack-github-action@v1.24.0
@@ -57,7 +30,7 @@ jobs:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "🔔 <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>\nPR ACTION: ${{ github.event.action }}"
+                            "text": "<${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>\n"
                         }
                     }
                 ]
