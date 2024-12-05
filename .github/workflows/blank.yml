@@ -5,6 +5,7 @@ on:
     types:
       - opened # open된 pr인 경우
       - reopened  # PR이 리오픈되었을 때
+      - review_requested # 리뷰 요청이 왔을 경우
     branches: ['main'] # 다른 브랜치에서 dev 브랜치를 향하는 경우
 
 
@@ -16,41 +17,38 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set environment variable
-        run: |
-          if [ -z "${{ github.event.pull_request.created_at }}" ]; then
-            echo "PR_CREATED_AT_UTC not available"
-            exit 1
-          fi
-          echo "PR_CREATED_AT_UTC=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
+      - name: Check if PR is opened
+        if: github.event.pull_request.action == 'opened'
+        run: echo "PR was opened!"
 
-      - name: Convert UTC to KST
-        run: |
-          UTC_TIME=$PR_CREATED_AT_UTC
-          KST_TIME=$(date -d "$UTC_TIME + 9 hours" "+%Y-%m-%dT%H:%M:%SZ")
-          echo "PR_CREATED_AT_KST=$KST_TIME" >> $GITHUB_ENV
+      - name: Check if PR is reopened
+        if: github.event.pull_request.action == 'reopened'
+        run: echo "PR was reopened!"
 
-      - name: Log times
-        run: |
-          echo "PR_CREATED_AT_UTC=$PR_CREATED_AT_UTC"
-          echo "PR_CREATED_AT_KST=$PR_CREATED_AT_KST"
+      - name: Check if review was requested
+        if: github.event.pull_request.action == 'review_requested'
+        run: echo "Review was requested!"
+        
       
-      - name: Send Slack notification When FE PR
-        uses: slackapi/slack-github-action@v1.24.0  # slack api 를 이용하기
-        with:
-          channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
-          payload: |
-            {
-                "text": "",
-                "blocks": [
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간: ${{ steps.deadline.outputs.DEADLINE }}"
-                        }
-                    }
-                ]
-                        }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Github Secret에 설정한 Slack 토큰 값 
+      # - name: Send Slack notification when review was requested.
+      #   if: github.event.pull_request.action == 'review_requested'
+      #   uses: slackapi/slack-github-action@v1.24.0  # slack api 를 이용하기
+      #   with:
+      #     channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
+      #     # text: 메시지 본문 설정
+      #     # block: 메시지 블록 설정
+      #     payload: |
+      #       {
+      #           "text": "pr review request",
+      #           "blocks": [
+      #               {
+      #                   "type": "section",
+      #                   "text": {
+      #                       "type": "mrkdwn",
+      #                       "text": "리뷰어로 할당되었습니다. \n\n\n<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간: ${{ steps.deadline.outputs.DEADLINE }}"
+      #                   }
+      #               }
+      #           ]
+      #                   }
+        # env: # 환경 변수를 설정합니다.
+        #   SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Github Secret에 설정한 Slack 토큰 값 
