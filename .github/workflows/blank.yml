@@ -51,7 +51,7 @@ jobs:
           channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
           payload: |
             {
-                "text": "",
+                "text": "pr request",
                 "blocks": [
                     {
                         "type": "section",
