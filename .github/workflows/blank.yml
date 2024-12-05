@@ -18,6 +18,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Remove "https://" from PR URL
+        id: remove_https
+        run: |
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          PR_URL="http://${PR_URL#https://}"          
+          echo "::set-output name=pr_url::$PR_URL"
+
       - name: Check if PR is opened
         if: github.event.action == 'opened'
         run: echo "PR was opened!"
@@ -35,7 +42,7 @@ jobs:
         run: echo "Review was synchronize!"
 
       - name: 상태 확인
-        run: echo "${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}"
+        run: echo "${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}"
         
       
       - name: Send Slack notification When BE PR
@@ -50,7 +57,7 @@ jobs:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "<${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>\nPR ACTION: ${{ github.event.action }}"
+                            "text": "<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\nPR ACTION: ${{ github.event.action }}"
                         }
                     }
                 ]
