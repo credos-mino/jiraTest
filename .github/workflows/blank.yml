@@ -22,16 +22,31 @@ jobs:
           payload: |
             {
                 "text": "*새로운 PR 요청이 도착했습니다!* :tada:",
-                 "blocks": [
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "<${{github.event.pull_request.html_url}}>"
-                        }
-                    }
-                ],
                 
+                "attachments": [
+                    {
+                        "color": "#36a64f",
+                        "title": "${{github.event.pull_request.title}}",
+                        "title_link": "${{github.event.pull_request.html_url}}",
+                        "text": "*요청자:* ${{github.event.pull_request.user.login}} :bust_in_silhouette:\n\n*상태:* ${{ github.event.pull_request.state}} ${{ github.event.pull_request.state == 'open' && ':rocket:' || ':lock:' }}\n\n<${{github.event.pull_request.html_url}}|PR 페이지로 이동>",
+                        "footer": "PR 검토 및 머지",
+                        "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+                        "actions": [
+                            {
+                                "type": "button",
+                                "text": "PR 페이지로 이동",
+                                "url": "${{github.event.pull_request.html_url}}",
+                                "style": "primary"
+                            }
+                        ]
+                    },
+                    {
+                        "color": "#ffcc00",
+                        "text": "🔧 *이 PR에 대한 추가 정보:*\n- *소스 브랜치*: `${{github.event.pull_request.head.ref}}`\n- *대상 브랜치*: `${{github.event.pull_request.base.ref}}`",
+                        "footer": "PR에 대한 추가 확인",
+                        "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
+                    }
+                ]
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
