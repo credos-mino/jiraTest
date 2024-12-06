@@ -16,7 +16,7 @@ jobs:
   mention-to-slack:
     runs-on: ubuntu-latest
     steps:
-      - name: Mention to Slack Actions
+      - name: Mention to Slack Actions 
         uses: Laurenfrost/mention-to-slack@latest
         with:
           configuration-path: .github/mention-to-slack.yml
