@@ -30,7 +30,7 @@ jobs:
                             "text": "<${{github.event.pull_request.html_url}}|PR 페이지로 이동>"
                         }
                     }
-                ],
+                ]
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
