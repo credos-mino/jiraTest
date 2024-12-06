@@ -17,14 +17,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set PR URL output
-        id: remove_https
-        run: echo "pr_url=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
-
-      - name: Set Deadline output
-        id: deadline
-        run: echo "DEADLINE=2024-12-12 15:00" >> $GITHUB_ENV
-
       - name: Send Slack notification When BE PR
         uses: slackapi/slack-github-action@v1.24.0
         with:
@@ -37,7 +29,7 @@ jobs:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간: ${{ steps.deadline.outputs.DEADLINE }}"
+                            "text": "<${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}> \n*변경 사항:* \n${{github.event.pull_request.body}} :page_facing_up:"
                         }
                     }
                 ],
@@ -46,7 +38,7 @@ jobs:
                         "color": "#36a64f",
                         "title": "${{github.event.pull_request.title}}",
                         "title_link": "${{github.event.pull_request.html_url}}",
-                        "text": "*요청자:* ${{github.event.pull_request.user.login}} :bust_in_silhouette:\n\n*상태:* ${{ github.event.pull_request.state}} ${{ github.event.pull_request.state == 'open' && ':rocket:' || ':lock:' }}\n\n*변경 사항:* \n${{github.event.pull_request.body}} :page_facing_up:",
+                        "text": "*요청자:* ${{github.event.pull_request.user.login}} :bust_in_silhouette:\n\n*상태:* ${{ github.event.pull_request.state}} ${{ github.event.pull_request.state == 'open' && ':rocket:' || ':lock:' }}\n",
                         "footer": "PR 검토 및 머지",
                         "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
                         "actions": [
