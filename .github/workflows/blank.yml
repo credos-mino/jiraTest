@@ -15,8 +15,16 @@ jobs:
     name: New PR to repo
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2      
-        
+        uses: actions/checkout@v2
+
+      - name: Set PR URL output
+        id: remove_https
+        run: echo "pr_url=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
+
+      - name: Set Deadline output
+        id: deadline
+        run: echo "DEADLINE=2024-12-12 15:00" >> $GITHUB_ENV
+
       - name: Send Slack notification When BE PR
         uses: slackapi/slack-github-action@v1.24.0
         with:
@@ -24,32 +32,37 @@ jobs:
           payload: |
             {
                 "text": "*새로운 PR 요청이 도착했습니다!* :tada:",
-                "attachments": [
+                "blocks": [
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간: ${{ steps.deadline.outputs.DEADLINE }}"
+                        }
+                    },
                     {
                         "color": "#36a64f",
-                        "title": "${{ github.event.pull_request.title }}",
-                        "title_link": "${{ github.event.pull_request.html_url }}",
-                        "text": "*요청자:* ${{ github.event.pull_request.user.login }} :bust_in_silhouette:\n\n*상태:* ${'{{'}} github.event.pull_request.state == 'open' ? ':rocket:' : ':lock:' ${'}}'}",
+                        "title": "${{github.event.pull_request.title}}",
+                        "title_link": "${{github.event.pull_request.html_url}}",
+                        "text": "*요청자:* ${{github.event.pull_request.user.login}} :bust_in_silhouette:\n\n*상태:* ${{ github.event.pull_request.state}} ${{ github.event.pull_request.state == 'open' && ':rocket:' || ':lock:' }}\n\n*변경 사항:* \n${{github.event.pull_request.body.replace('\n', '\\n')}} :page_facing_up:",
                         "footer": "PR 검토 및 머지",
                         "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
                         "actions": [
                             {
                                 "type": "button",
                                 "text": "PR 페이지로 이동",
-                                "url": "${{ github.event.pull_request.html_url }}",
+                                "url": "${{github.event.pull_request.html_url}}",
                                 "style": "primary"
                             }
                         ]
                     },
                     {
                         "color": "#ffcc00",
-                        "text": "🔧 *이 PR에 대한 추가 정보:*\n- *소스 브랜치*: `${{ github.event.pull_request.head.ref }}`\n- *대상 브랜치*: `${{ github.event.pull_request.base.ref }}`\n\n*변경 사항:*\n```\n${{ toJson(github.event.pull_request.body) || '내용 없음' }}\n```",
+                        "text": "🔧 *이 PR에 대한 추가 정보:*\n- *소스 브랜치*: `${{github.event.pull_request.head.ref}}`\n- *대상 브랜치*: `${{github.event.pull_request.base.ref}}`",
                         "footer": "PR에 대한 추가 확인",
                         "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
                     }
                 ]
             }
-      
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
-      
