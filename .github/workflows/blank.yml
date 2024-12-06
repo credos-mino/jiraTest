@@ -37,14 +37,16 @@ jobs:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간: ${{ steps.deadline.outputs.DEADLINE }}\n*변경 사항:* \n${{github.event.pull_request.body}} :page_facing_up:"
+                            "text": "<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간: ${{ steps.deadline.outputs.DEADLINE }}"
                         }
-                    },
+                    }
+                ],
+                "attachments": [
                     {
                         "color": "#36a64f",
                         "title": "${{github.event.pull_request.title}}",
                         "title_link": "${{github.event.pull_request.html_url}}",
-                        "text": "*요청자:* ${{github.event.pull_request.user.login}} :bust_in_silhouette:\n\n*상태:* ${{ github.event.pull_request.state}} ${{ github.event.pull_request.state == 'open' && ':rocket:' || ':lock:' }}\n",
+                        "text": "*요청자:* ${{github.event.pull_request.user.login}} :bust_in_silhouette:\n\n*상태:* ${{ github.event.pull_request.state}} ${{ github.event.pull_request.state == 'open' && ':rocket:' || ':lock:' }}\n\n*변경 사항:* \n${{github.event.pull_request.body.replace('\n', '\\n')}} :page_facing_up:",
                         "footer": "PR 검토 및 머지",
                         "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
                         "actions": [
