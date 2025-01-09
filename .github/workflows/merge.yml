@@ -3,7 +3,7 @@ name: PR Merged Notification (BE)
 on:
   pull_request:
     types: [closed]  # PR이 닫혔을 때 (머지된 경우 포함)
-    branches: [ 'develop' ]
+    branches: [ 'main' ]
 jobs:
   notify_slack:
     runs-on: ubuntu-latest
