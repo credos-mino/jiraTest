@@ -13,6 +13,12 @@ jobs:
         env:
           GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
         run: |
+          # GitHub 변수 값 할당
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"
+          TARGET_BRANCH="${{ github.event.pull_request.base.ref }}"
+          
           curl -X POST "${GOOGLE_CHAT_WEBHOOK_URL}" \
           -H "Content-Type: application/json" \
           -d '{
@@ -20,8 +26,8 @@ jobs:
                 "cards": [
                   {
                     "header": {
-                      "title": "머지된 PR: ${github.event.pull_request.title}",
-                      "subtitle": "PR이 성공적으로 머지되었습니다! :rocket:",
+                      "title": "머지된 PR:'"$PR_TITLE"'",
+                      "subtitle": "PR이 성공적으로 머지되었습니다! 🚀",
                       "imageUrl": "https://img.icons8.com/ios-filled/344/github.png"
                     },
                     "sections": [
@@ -30,13 +36,15 @@ jobs:
                         {
                             "keyValue": {
                               "topLabel": "소스 브랜치",
-                              "content": "`${{github.event.pull_request.head.ref}}`"
+                              "content": "'"$SOURCE_BRANCH"'",
+                              "contentMultiline": true
                             }
                           },
                           {
                             "keyValue": {
                               "topLabel": "대상 브랜치",
-                              "content": "`${{github.event.pull_request.base.ref}}`"
+                             "content": "'"$TARGET_BRANCH"'",
+                              "contentMultiline": true
                             }
                           },
                           {
@@ -46,7 +54,7 @@ jobs:
                                   "text": "PR 페이지로 이동",
                                   "onClick": {
                                     "openLink": {
-                                      "url": "${{github.event.pull_request.html_url}}"
+                                      "url": "'"$PR_URL"'"
                                     }
                                   }
                                 }
