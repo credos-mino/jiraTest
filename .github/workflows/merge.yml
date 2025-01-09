@@ -16,12 +16,12 @@ jobs:
           curl -X POST "${GOOGLE_CHAT_WEBHOOK_URL}" \
           -H "Content-Type: application/json" \
           -d '{
-                "text": "*PR 머지가 완료되었습니다!* 🎉",
+                "text": "*새로운 PR 요청이 도착했습니다!* 🎉",
                 "cards": [
                   {
                     "header": {
-                      "title": "머지된 PR: ${github.event.pull_request.title}",
-                      "subtitle": "PR이 성공적으로 머지되었습니다! :rocket:",
+                      "title": "Pull Request Notification",
+                      "subtitle": "📢 새로운 PR이 생성되었습니다. 확인 후 검토를 진행해주세요.",
                       "imageUrl": "https://img.icons8.com/ios-filled/344/github.png"
                     },
                     "sections": [
@@ -29,14 +29,27 @@ jobs:
                         "widgets": [
                           {
                             "keyValue": {
+                              "topLabel": "PR 제목",
+                              "content": "${{github.event.pull_request.title}}",
+                              "contentMultiline": true
+                            }
+                          },
+                          {
+                            "keyValue": {
+                              "topLabel": "요청자",
+                              "content": "`${{github.event.pull_request.user.login}}`"
+                            }
+                          },
+                          {
+                            "keyValue": {
                               "topLabel": "소스 브랜치",
-                              "content": "[${github.event.pull_request.head.ref}]"
+                              "content": "`${{github.event.pull_request.head.ref}}`"
                             }
                           },
                           {
                             "keyValue": {
                               "topLabel": "대상 브랜치",
-                              "content": "[${github.event.pull_request.base.ref}]"
+                              "content": "`${{github.event.pull_request.base.ref}}`"
                             }
                           },
                           {
@@ -46,7 +59,7 @@ jobs:
                                   "text": "PR 페이지로 이동",
                                   "onClick": {
                                     "openLink": {
-                                      "url": "${github.event.pull_request.html_url}"
+                                      "url": "${{github.event.pull_request.html_url}}"
                                     }
                                   }
                                 }
