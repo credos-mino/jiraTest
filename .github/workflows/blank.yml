@@ -43,19 +43,19 @@ jobs:
                           {
                             "keyValue": {
                               "topLabel": "요청자",
-                              "content": "`${{github.event.pull_request.user.login}}`"
+                              "content": "```${{github.event.pull_request.user.login}}```"
                             }
                           },
                           {
                             "keyValue": {
                               "topLabel": "소스 브랜치",
-                              "content": "`${{github.event.pull_request.head.ref}}`"
+                              "content": "```${{github.event.pull_request.head.ref}}```"
                             }
                           },
                           {
                             "keyValue": {
                               "topLabel": "대상 브랜치",
-                              "content": "`${{github.event.pull_request.base.ref}}`"
+                              "content": "```${{github.event.pull_request.base.ref}}```"
                             }
                           },
                           {
