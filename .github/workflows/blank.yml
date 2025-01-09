@@ -22,12 +22,13 @@ jobs:
           curl -X POST "${GOOGLE_CHAT_WEBHOOK_URL}" \
           -H "Content-Type: application/json" \
           -d '{
+                "text": "*새로운 PR 요청이 도착했습니다!* 🎉",
                 "cards": [
                   {
                     "header": {
-                      "title": "New PR Notification",
-                      "subtitle": "A new pull request is opened in the repository",
-                      "imageUrl": "https://example.com/image.png"
+                      "title": "New Pull Request Notification",
+                      "subtitle": "A pull request has been opened in the repository.",
+                      "imageUrl": "https://platform.slack-edge.com/img/default_application_icon.png"
                     },
                     "sections": [
                       {
@@ -35,13 +36,26 @@ jobs:
                           {
                             "keyValue": {
                               "topLabel": "PR Title",
-                              "content": "${{github.event.pull_request.title}}"
+                              "content": "${{github.event.pull_request.title}}",
+                              "contentMultiline": true
                             }
                           },
                           {
                             "keyValue": {
                               "topLabel": "Requested By",
                               "content": "${{github.event.pull_request.user.login}}"
+                            }
+                          },
+                          {
+                            "keyValue": {
+                              "topLabel": "Source Branch",
+                              "content": "${{github.event.pull_request.head.ref}}"
+                            }
+                          },
+                          {
+                            "keyValue": {
+                              "topLabel": "Target Branch",
+                              "content": "${{github.event.pull_request.base.ref}}"
                             }
                           },
                           {
@@ -64,4 +78,3 @@ jobs:
                   }
                 ]
               }'
-
