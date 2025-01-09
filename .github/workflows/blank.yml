@@ -22,61 +22,46 @@ jobs:
           curl -X POST "${GOOGLE_CHAT_WEBHOOK_URL}" \
           -H "Content-Type: application/json" \
           -d '{
-                "text": "*새로운 PR 요청이 도착했습니다!* 🎉",
                 "cards": [
                   {
                     "header": {
-                      "title": "새로운 Pull Request 알림",
-                      "subtitle": "Repository: ${{ github.repository }}",
-                      "imageUrl": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+                      "title": "New PR Notification",
+                      "subtitle": "A new pull request is opened in the repository",
+                      "imageUrl": "https://example.com/image.png"
                     },
                     "sections": [
                       {
                         "widgets": [
                           {
                             "keyValue": {
-                              "topLabel": "PR 제목",
-                              "content": "${{ github.event.pull_request.title }}",
-                              "onClick": {
-                                "openLink": {
-                                  "url": "${{ github.event.pull_request.html_url }}"
+                              "topLabel": "PR Title",
+                              "content": "${{github.event.pull_request.title}}"
+                            }
+                          },
+                          {
+                            "keyValue": {
+                              "topLabel": "Requested By",
+                              "content": "${{github.event.pull_request.user.login}}"
+                            }
+                          },
+                          {
+                            "buttons": [
+                              {
+                                "textButton": {
+                                  "text": "View Pull Request",
+                                  "onClick": {
+                                    "openLink": {
+                                      "url": "${{github.event.pull_request.html_url}}"
+                                    }
+                                  }
                                 }
                               }
-                            }
-                          },
-                          {
-                            "keyValue": {
-                              "topLabel": "요청자",
-                              "content": "${{ github.event.pull_request.user.login }}"
-                            }
-                          },
-                          {
-                            "keyValue": {
-                              "topLabel": "소스 브랜치",
-                              "content": "${{ github.event.pull_request.head.ref }}"
-                            }
-                          },
-                          {
-                            "keyValue": {
-                              "topLabel": "대상 브랜치",
-                              "content": "${{ github.event.pull_request.base.ref }}"
-                            }
+                            ]
                           }
                         ]
-                      }
-                    ],
-                    "buttons": [
-                      {
-                        "textButton": {
-                          "text": "PR 페이지로 이동",
-                          "onClick": {
-                            "openLink": {
-                              "url": "${{ github.event.pull_request.html_url }}"
-                            }
-                          }
-                        }
                       }
                     ]
                   }
                 ]
               }'
+
