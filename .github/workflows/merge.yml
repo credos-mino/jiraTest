@@ -1,31 +1,31 @@
-name: PR Merged Notification
+# name: PR Merged Notification
 
-on:
-  pull_request:
-    types: [closed]  # PR이 닫혔을 때 (머지된 경우 포함)
+# on:
+#   pull_request:
+#     types: [closed]  # PR이 닫혔을 때 (머지된 경우 포함)
 
-jobs:
-  notify_slack:
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true  # PR이 머지된 경우에만 실행
-    steps:
-      - name: Send Slack notification when PR is merged
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          channel-id: ${{ secrets.SLACK_FE_CHANNEL }}
-          payload: |
-            {
-                "text": "*PR가 머지되었습니다!* :tada:",
-                "attachments": [
-                    {
-                        "color": "#36a64f",
-                        "title": "머지된 PR: ${{ github.event.pull_request.title }}",
-                        "title_link": "${{ github.event.pull_request.html_url }}",
-                        "text": "PR이 성공적으로 머지되었습니다! :rocket:\n\n*소스 브랜치*: `${{ github.event.pull_request.head.ref }}`\n*대상 브랜치*: `${{ github.event.pull_request.base.ref }}`",
-                        "footer": "PR 머지 완료",
-                        "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
-                    }
-                ]
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
+# jobs:
+#   notify_slack:
+#     runs-on: ubuntu-latest
+#     if: github.event.pull_request.merged == true  # PR이 머지된 경우에만 실행
+#     steps:
+#       - name: Send Slack notification when PR is merged
+#         uses: slackapi/slack-github-action@v1.24.0
+#         with:
+#           channel-id: ${{ secrets.SLACK_FE_CHANNEL }}
+#           payload: |
+#             {
+#                 "text": "*PR가 머지되었습니다!* :tada:",
+#                 "attachments": [
+#                     {
+#                         "color": "#36a64f",
+#                         "title": "머지된 PR: ${{ github.event.pull_request.title }}",
+#                         "title_link": "${{ github.event.pull_request.html_url }}",
+#                         "text": "PR이 성공적으로 머지되었습니다! :rocket:\n\n*소스 브랜치*: `${{ github.event.pull_request.head.ref }}`\n*대상 브랜치*: `${{ github.event.pull_request.base.ref }}`",
+#                         "footer": "PR 머지 완료",
+#                         "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
+#                     }
+#                 ]
+#             }
+#         env:
+#           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
