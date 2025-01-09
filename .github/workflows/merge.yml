@@ -1,31 +1,59 @@
-# name: PR Merged Notification
+name: PR Merged Notification (BE)
 
-# on:
-#   pull_request:
-#     types: [closed]  # PR이 닫혔을 때 (머지된 경우 포함)
-
-# jobs:
-#   notify_slack:
-#     runs-on: ubuntu-latest
-#     if: github.event.pull_request.merged == true  # PR이 머지된 경우에만 실행
-#     steps:
-#       - name: Send Slack notification when PR is merged
-#         uses: slackapi/slack-github-action@v1.24.0
-#         with:
-#           channel-id: ${{ secrets.SLACK_FE_CHANNEL }}
-#           payload: |
-#             {
-#                 "text": "*PR가 머지되었습니다!* :tada:",
-#                 "attachments": [
-#                     {
-#                         "color": "#36a64f",
-#                         "title": "머지된 PR: ${{ github.event.pull_request.title }}",
-#                         "title_link": "${{ github.event.pull_request.html_url }}",
-#                         "text": "PR이 성공적으로 머지되었습니다! :rocket:\n\n*소스 브랜치*: `${{ github.event.pull_request.head.ref }}`\n*대상 브랜치*: `${{ github.event.pull_request.base.ref }}`",
-#                         "footer": "PR 머지 완료",
-#                         "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
-#                     }
-#                 ]
-#             }
-#         env:
-#           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
+on:
+  pull_request:
+    types: [closed]  # PR이 닫혔을 때 (머지된 경우 포함)
+    branches: [ 'develop' ]
+jobs:
+  notify_slack:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true  # PR이 머지된 경우에만 실행
+    steps:
+      - name: Send Google Chat notification when PR is merged
+        run: |
+          curl -X POST "${GOOGLE_CHAT_WEBHOOK_URL}" \
+          -H "Content-Type: application/json" \
+          -d '{
+                "text": "*PR가 머지되었습니다!* 🎉",
+                "cards": [
+                  {
+                    "header": {
+                      "title": "머지된 PR: ${github.event.pull_request.title}",
+                      "subtitle": "PR이 성공적으로 머지되었습니다! :rocket:",
+                      "imageUrl": "https://img.icons8.com/ios-filled/344/github.png"
+                    },
+                    "sections": [
+                      {
+                        "widgets": [
+                          {
+                            "keyValue": {
+                              "topLabel": "소스 브랜치",
+                              "content": "[${github.event.pull_request.head.ref}]"
+                            }
+                          },
+                          {
+                            "keyValue": {
+                              "topLabel": "대상 브랜치",
+                              "content": "[${github.event.pull_request.base.ref}]"
+                            }
+                          },
+                          {
+                            "buttons": [
+                              {
+                                "textButton": {
+                                  "text": "PR 페이지로 이동",
+                                  "onClick": {
+                                    "openLink": {
+                                      "url": "${github.event.pull_request.html_url}"
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }'
