@@ -1,11 +1,11 @@
-name: Notify Pull Request (BE)
+name: PR Request Notification (BE)
 
 on:
   pull_request:
     types:
       - opened  # PR이 처음 열릴 때
       - reopened  # PR이 리오픈될 때
-    branches: ['main']
+    branches: [ 'develop' ]
 
 jobs:
   pull_request_open:
@@ -15,32 +15,68 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Send Slack notification When BE PR
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
-          payload: |
-            {
-                "text": "*새로운 PR 요청이 도착했습니다!* :tada:",
-                
-                "attachments": [
-                    {
-                        "color": "#36a64f",
-                        "title": "${{github.event.pull_request.title}}",
-                        "title_link": "${{github.event.pull_request.html_url}}",
-                        "text": "*요청자:* ${{github.event.pull_request.user.login}} :bust_in_silhouette:\n\n*소스 브랜치*: `${{github.event.pull_request.head.ref}}`\n- *대상 브랜치*: `${{github.event.pull_request.base.ref}}`\n",
-                        "footer": "PR 검토 및 머지",
-                        "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
-                        "actions": [
-                            {
-                                "type": "button",
-                                "text": "PR 페이지로 이동",
-                                "url": "${{github.event.pull_request.html_url}}",
-                                "style": "primary"
-                            }
-                        ]
-                    }
-                ]
-            }
+      - name: Send Google Chat notification When BE PR
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
+          GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+        run: |
+          curl -X POST "${GOOGLE_CHAT_WEBHOOK_URL}" \
+          -H "Content-Type: application/json" \
+          -d '{
+                "text": "*새로운 PR 요청이 도착했습니다!* 🎉",
+                "cards": [
+                  {
+                    "header": {
+                      "title": "새로운 Pull Request 알림",
+                      "subtitle": "Repository: ${{ github.repository }}",
+                      "imageUrl": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+                    },
+                    "sections": [
+                      {
+                        "widgets": [
+                          {
+                            "keyValue": {
+                              "topLabel": "PR 제목",
+                              "content": "${{ github.event.pull_request.title }}",
+                              "onClick": {
+                                "openLink": {
+                                  "url": "${{ github.event.pull_request.html_url }}"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "keyValue": {
+                              "topLabel": "요청자",
+                              "content": "${{ github.event.pull_request.user.login }}"
+                            }
+                          },
+                          {
+                            "keyValue": {
+                              "topLabel": "소스 브랜치",
+                              "content": "${{ github.event.pull_request.head.ref }}"
+                            }
+                          },
+                          {
+                            "keyValue": {
+                              "topLabel": "대상 브랜치",
+                              "content": "${{ github.event.pull_request.base.ref }}"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "buttons": [
+                      {
+                        "textButton": {
+                          "text": "PR 페이지로 이동",
+                          "onClick": {
+                            "openLink": {
+                              "url": "${{ github.event.pull_request.html_url }}"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }'
