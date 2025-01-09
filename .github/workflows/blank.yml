@@ -5,7 +5,7 @@ on:
     types:
       - opened  # PR이 처음 열릴 때
       - reopened  # PR이 리오픈될 때
-    branches: [ 'develop' ]
+    branches: [ 'main' ]
 
 jobs:
   pull_request_open:
@@ -17,7 +17,7 @@ jobs:
 
       - name: Send Google Chat notification When BE PR
         env:
-          GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+          GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
         run: |
           curl -X POST "${GOOGLE_CHAT_WEBHOOK_URL}" \
           -H "Content-Type: application/json" \
