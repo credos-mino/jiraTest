@@ -9,7 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true  # PR이 머지된 경우에만 실행
     steps:
-      - name: Send Google Chat notification when PR is merged
+      - name: Send Google Chat notification when PR is merged        
+        env:
+          GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
         run: |
           curl -X POST "${GOOGLE_CHAT_WEBHOOK_URL}" \
           -H "Content-Type: application/json" \
